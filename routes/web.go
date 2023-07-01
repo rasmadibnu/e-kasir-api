@@ -19,6 +19,7 @@ func WebRouter(db config.Database) {
 	produkRepo := repository.NewProdukRepository(db)
 	stokRepo := repository.NewStokRepository(db)
 	transaksiRepo := repository.NewTransaksiRepository(db)
+	kategoriRepo := repository.NewKategoriRepository(db)
 
 	// Service Asset
 	userService := service.NewUserService(userRepo)
@@ -27,6 +28,7 @@ func WebRouter(db config.Database) {
 	produkService := service.NewProdukService(produkRepo)
 	stokService := service.NewStokService(stokRepo)
 	transaksiService := service.NewTransaksiService(transaksiRepo)
+	kategoriService := service.NewKategoriService(kategoriRepo)
 
 	//Controller Asset
 	authController := controller.NewAuthController(userService, authService)
@@ -35,6 +37,7 @@ func WebRouter(db config.Database) {
 	produkController := controller.NewProdukController(produkService)
 	stokController := controller.NewStokController(stokService)
 	transaksiController := controller.NewTransaksiController(transaksiService)
+	kategoriController := controller.NewKategoriController(kategoriService)
 
 	// Route
 	httpRouter := gin.Default()
@@ -58,17 +61,26 @@ func WebRouter(db config.Database) {
 	v1.GET("/users", userController.Index)
 	v1.POST("/users", userController.Store)
 	v1.GET("/users/:id", userController.Show)
+	v1.PUT("/users/:id", userController.Update)
 	v1.DELETE("/users/:id", userController.Delete)
 
 	v1.GET("/suppliers", supplierController.Index)
 	v1.POST("/suppliers", supplierController.Store)
 	v1.GET("/suppliers/:id", supplierController.Show)
+	v1.PUT("/suppliers/:id", supplierController.Update)
 	v1.DELETE("/suppliers/:id", supplierController.Delete)
 
 	v1.GET("/produk", produkController.Index)
 	v1.POST("/produk", produkController.Store)
 	v1.GET("/produk/:id", produkController.Show)
+	v1.PUT("/produk/:id", produkController.Update)
 	v1.DELETE("/produk/:id", produkController.Delete)
+
+	v1.GET("/kategori", kategoriController.Index)
+	v1.POST("/kategori", kategoriController.Store)
+	v1.GET("/kategori/:id", kategoriController.Show)
+	v1.PUT("/kategori/:id", kategoriController.Update)
+	v1.DELETE("/kategori/:id", kategoriController.Delete)
 
 	v1.GET("/stoks", stokController.Index)
 	v1.POST("/stoks", stokController.Store)
