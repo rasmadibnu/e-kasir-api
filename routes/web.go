@@ -15,14 +15,26 @@ import (
 func WebRouter(db config.Database) {
 	// Repository Asset
 	userRepo := repository.NewUserRepository(db)
+	supplierRepo := repository.NewSupplierRepository(db)
+	produkRepo := repository.NewProdukRepository(db)
+	stokRepo := repository.NewStokRepository(db)
+	transaksiRepo := repository.NewTransaksiRepository(db)
 
 	// Service Asset
 	userService := service.NewUserService(userRepo)
 	authService := service.NewAuthService(userRepo)
+	supplierService := service.NewSupplierService(supplierRepo)
+	produkService := service.NewProdukService(produkRepo)
+	stokService := service.NewStokService(stokRepo)
+	transaksiService := service.NewTransaksiService(transaksiRepo)
 
 	//Controller Asset
 	authController := controller.NewAuthController(userService, authService)
 	userController := controller.NewUserConstroller(userService)
+	supplierController := controller.NewSupplierController(supplierService)
+	produkController := controller.NewProdukController(produkService)
+	stokController := controller.NewStokController(stokService)
+	transaksiController := controller.NewTransaksiController(transaksiService)
 
 	// Route
 	httpRouter := gin.Default()
@@ -47,6 +59,26 @@ func WebRouter(db config.Database) {
 	v1.POST("/users", userController.Store)
 	v1.GET("/users/:id", userController.Show)
 	v1.DELETE("/users/:id", userController.Delete)
+
+	v1.GET("/suppliers", supplierController.Index)
+	v1.POST("/suppliers", supplierController.Store)
+	v1.GET("/suppliers/:id", supplierController.Show)
+	v1.DELETE("/suppliers/:id", supplierController.Delete)
+
+	v1.GET("/produk", produkController.Index)
+	v1.POST("/produk", produkController.Store)
+	v1.GET("/produk/:id", produkController.Show)
+	v1.DELETE("/produk/:id", produkController.Delete)
+
+	v1.GET("/stoks", stokController.Index)
+	v1.POST("/stoks", stokController.Store)
+	v1.GET("/stoks/:id", stokController.Show)
+	v1.DELETE("/stoks/:id", stokController.Delete)
+
+	v1.GET("/transaksi", transaksiController.Index)
+	v1.POST("/transaksi", transaksiController.Store)
+	v1.GET("/transaksi/:id", transaksiController.Show)
+	v1.DELETE("/transaksi/:id", transaksiController.Delete)
 
 	httpRouter.Run(":" + os.Getenv("APP_PORT")) // Run Routes with PORT
 }
