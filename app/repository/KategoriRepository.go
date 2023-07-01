@@ -34,7 +34,7 @@ func (r *KategoriRepository) Insert(Kategori entity.Kategori) (entity.Kategori, 
 func (r *KategoriRepository) FindAll(param map[string]interface{}) ([]entity.Kategori, error) {
 	var Kategoris []entity.Kategori
 
-	err := r.config.DB.Where(param).Find(&Kategoris).Error
+	err := r.config.DB.Where(param).Preload("UserCreate").Find(&Kategoris).Error
 
 	if err != nil {
 		return Kategoris, err
