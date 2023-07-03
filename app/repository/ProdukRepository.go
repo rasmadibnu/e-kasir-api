@@ -34,7 +34,7 @@ func (r *ProdukRepository) Insert(Produk entity.Produk) (entity.Produk, error) {
 func (r *ProdukRepository) FindAll(param map[string]interface{}) ([]entity.Produk, error) {
 	var Produks []entity.Produk
 
-	err := r.config.DB.Where(param).Find(&Produks).Error
+	err := r.config.DB.Where(param).Preload("UserCreate").Preload("Stok").Preload("Kategori").Preload("Supplier").Order("id desc").Find(&Produks).Error
 
 	if err != nil {
 		return Produks, err

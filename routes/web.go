@@ -58,6 +58,8 @@ func WebRouter(db config.Database) {
 	httpRouter.POST("/api/v1/login", authController.Login)
 
 	v1 := httpRouter.Group("/api/v1") // Grouping routes
+	v1.Static("/uploads", "./uploads")
+
 	v1.GET("/users", userController.Index)
 	v1.POST("/users", userController.Store)
 	v1.GET("/users/:id", userController.Show)

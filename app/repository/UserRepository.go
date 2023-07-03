@@ -34,7 +34,7 @@ func (r *UserRepository) Insert(user entity.User) (entity.User, error) {
 func (r *UserRepository) FindAll(m map[string]interface{}) ([]entity.User, error) {
 	var users []entity.User
 
-	err := r.config.DB.Where(m).Order("id desc").Find(&users).Error
+	err := r.config.DB.Where(m).Preload("UserCreate").Order("id desc").Find(&users).Error
 
 	if err != nil {
 		return users, err

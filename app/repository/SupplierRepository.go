@@ -34,7 +34,7 @@ func (r *SupplierRepository) Insert(Supplier entity.Supplier) (entity.Supplier, 
 func (r *SupplierRepository) FindAll(param map[string]interface{}) ([]entity.Supplier, error) {
 	var Suppliers []entity.Supplier
 
-	err := r.config.DB.Where(param).Find(&Suppliers).Error
+	err := r.config.DB.Where(param).Preload("UserCreate").Find(&Suppliers).Error
 
 	if err != nil {
 		return Suppliers, err

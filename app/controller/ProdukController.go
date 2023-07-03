@@ -5,7 +5,10 @@ import (
 	"kasir-cepat-api/app/service"
 	"kasir-cepat-api/helper"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -59,14 +62,53 @@ func (controller ProdukController) Index(ctx *gin.Context) {
 // @Router /produk
 func (controller ProdukController) Store(ctx *gin.Context) {
 	var req entity.Produk
+	file, err := ctx.FormFile("file")
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp := helper.ErrorJSON(ctx, "Failed to crate Produk", http.StatusBadRequest, err.Error())
+	if err != nil {
+		resp := helper.ErrorJSON(ctx, "Failed to get file", http.StatusBadRequest, err.Error())
 
 		ctx.JSON(http.StatusBadRequest, resp)
 
 		return
 	}
+
+	filename := filepath.Base(file.Filename)
+	now := time.Now()
+
+	dst := filepath.Join("uploads", now.Format("20060102-150405")+"-"+filename)
+
+	err = os.MkdirAll("uploads", os.ModePerm)
+
+	if err != nil {
+		resp := helper.ErrorJSON(ctx, "Failed to crate upload directory", http.StatusBadRequest, err.Error())
+
+		ctx.JSON(http.StatusBadRequest, resp)
+
+		return
+	}
+
+	if err := ctx.SaveUploadedFile(file, dst); err != nil {
+		resp := helper.ErrorJSON(ctx, "Failed to save file", http.StatusBadRequest, err.Error())
+
+		ctx.JSON(http.StatusBadRequest, resp)
+
+		return
+	}
+
+	createdBy, _ := strconv.Atoi(ctx.PostForm("created_by"))
+	req.Name = ctx.PostForm("name")
+	req.Deskripsi = ctx.PostForm("deskripsi")
+	req.KategoriID, _ = strconv.Atoi(ctx.PostForm("kategori_id"))
+	req.SupplierID, _ = strconv.Atoi(ctx.PostForm("supplier_id"))
+	stok, _ := strconv.Atoi(ctx.PostForm("stok"))
+	req.Stok = entity.Stok{
+		Stok:      stok,
+		Value:     stok,
+		Type:      "New",
+		CreatedBy: createdBy,
+	}
+	req.UserCreateID = createdBy
+	req.Image = dst
 
 	produk, err := controller.service.Insert(req)
 
@@ -129,14 +171,42 @@ func (controller ProdukController) Update(ctx *gin.Context) {
 	}
 
 	var req entity.Produk
+	file, err := ctx.FormFile("file")
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp := helper.ErrorJSON(ctx, "Failed to update Produk", http.StatusBadRequest, err.Error())
+	if err == nil {
+		filename := filepath.Base(file.Filename)
+		now := time.Now()
 
-		ctx.JSON(http.StatusBadRequest, resp)
+		dst := filepath.Join("uploads", now.Format("20060102-150405")+"-"+filename)
 
-		return
+		err = os.MkdirAll("uploads", os.ModePerm)
+
+		if err != nil {
+			resp := helper.ErrorJSON(ctx, "Failed to crate upload directory", http.StatusBadRequest, err.Error())
+
+			ctx.JSON(http.StatusBadRequest, resp)
+
+			return
+		}
+
+		if err := ctx.SaveUploadedFile(file, dst); err != nil {
+			resp := helper.ErrorJSON(ctx, "Failed to save file", http.StatusBadRequest, err.Error())
+
+			ctx.JSON(http.StatusBadRequest, resp)
+
+			return
+		}
+
+		req.Image = dst
 	}
+
+	updatedBy, _ := strconv.Atoi(ctx.PostForm("updated_by"))
+	req.Name = ctx.PostForm("name")
+	req.Deskripsi = ctx.PostForm("deskripsi")
+	req.KategoriID, _ = strconv.Atoi(ctx.PostForm("kategori_id"))
+	req.SupplierID, _ = strconv.Atoi(ctx.PostForm("supplier_id"))
+
+	req.UserUpdateID = updatedBy
 
 	Produk, err := controller.service.Update(req, ID)
 

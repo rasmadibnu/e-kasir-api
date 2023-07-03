@@ -46,6 +46,7 @@ func (s *UserService) Insert(req entity.User) (entity.User, error) {
 		PhoneNumber:  req.PhoneNumber,
 		JenisKelamin: req.JenisKelamin,
 		Role:         req.Role,
+		CreatedBy:    req.CreatedBy,
 	}
 
 	newUser, err := s.repository.Insert(user)
