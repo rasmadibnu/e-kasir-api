@@ -10,6 +10,7 @@ type Kategori struct {
 	ID           int            `gorm:"column:id;type:int(11);primary_key" json:"id"`
 	Name         string         `gorm:"column:name;type:varchar(255)" json:"name"`
 	Deskripsi    *string        `gorm:"column:deskripsi;type:varchar(255)" json:"deskripsi"`
+	Produk       []Produk       `json:"produk"`
 	UserCreateID int            `gorm:"column:created_by;type:int(11)" json:"created_by"`
 	UserCreate   User           `gorm:"foreignKey:UserCreateID" json:"user_create"`
 	CreatedAt    time.Time      `gorm:"column:created_at;type:timestamp" json:"created_at"`

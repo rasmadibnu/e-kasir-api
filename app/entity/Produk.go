@@ -3,6 +3,7 @@ package entity
 import (
 	"time"
 
+	"github.com/yudapc/go-rupiah"
 	"gorm.io/gorm"
 )
 
@@ -13,6 +14,8 @@ type Produk struct {
 	Name         string         `gorm:"column:name;type:varchar(255)" json:"name"`
 	Deskripsi    string         `gorm:"column:deskripsi;type:varchar(255)" json:"deskripsi"`
 	KategoriID   int            `gorm:"column:kategori_id;type:varchar(255)" json:"kategori_id"`
+	Harga        int            `gorm:"column:harga;type:int(11)" json:"harga"`
+	HargaRp      string         `gorm:"-" json:"harga_rp"`
 	Supplier     Supplier       `json:"supplier"`
 	Kategori     Kategori       `json:"kategori"`
 	Stok         Stok           `json:"stok"`
@@ -27,4 +30,11 @@ type Produk struct {
 
 func (m *Produk) TableName() string {
 	return "produk"
+}
+
+func (u *Produk) AfterFind(tx *gorm.DB) (err error) {
+	amount := u.Harga
+	amountFloat := float64(amount)
+	u.HargaRp = rupiah.FormatRupiah(amountFloat)
+	return
 }

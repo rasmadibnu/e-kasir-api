@@ -3,6 +3,8 @@ package repository
 import (
 	"kasir-cepat-api/app/entity"
 	"kasir-cepat-api/config"
+
+	"gorm.io/gorm"
 )
 
 type KategoriRepository struct {
@@ -34,7 +36,9 @@ func (r *KategoriRepository) Insert(Kategori entity.Kategori) (entity.Kategori, 
 func (r *KategoriRepository) FindAll(param map[string]interface{}) ([]entity.Kategori, error) {
 	var Kategoris []entity.Kategori
 
-	err := r.config.DB.Where(param).Preload("UserCreate").Find(&Kategoris).Error
+	err := r.config.DB.Where(param).Preload("Produk", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("Stok").Preload("Supplier")
+	}).Preload("UserCreate").Find(&Kategoris).Error
 
 	if err != nil {
 		return Kategoris, err
