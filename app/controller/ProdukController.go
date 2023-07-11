@@ -96,6 +96,7 @@ func (controller ProdukController) Store(ctx *gin.Context) {
 	}
 
 	createdBy, _ := strconv.Atoi(ctx.PostForm("created_by"))
+	harga, _ := strconv.Atoi(ctx.PostForm("harga"))
 	req.Name = ctx.PostForm("name")
 	req.Deskripsi = ctx.PostForm("deskripsi")
 	req.KategoriID, _ = strconv.Atoi(ctx.PostForm("kategori_id"))
@@ -109,6 +110,7 @@ func (controller ProdukController) Store(ctx *gin.Context) {
 	}
 	req.UserCreateID = createdBy
 	req.Image = dst
+	req.Harga = harga
 
 	produk, err := controller.service.Insert(req)
 
@@ -201,10 +203,12 @@ func (controller ProdukController) Update(ctx *gin.Context) {
 	}
 
 	updatedBy, _ := strconv.Atoi(ctx.PostForm("updated_by"))
+	harga, _ := strconv.Atoi(ctx.PostForm("harga"))
 	req.Name = ctx.PostForm("name")
 	req.Deskripsi = ctx.PostForm("deskripsi")
 	req.KategoriID, _ = strconv.Atoi(ctx.PostForm("kategori_id"))
 	req.SupplierID, _ = strconv.Atoi(ctx.PostForm("supplier_id"))
+	req.Harga = harga
 
 	req.UserUpdateID = updatedBy
 
