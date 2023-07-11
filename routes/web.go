@@ -28,7 +28,7 @@ func WebRouter(db config.Database) {
 	supplierService := service.NewSupplierService(supplierRepo)
 	produkService := service.NewProdukService(produkRepo)
 	stokService := service.NewStokService(stokRepo)
-	transaksiService := service.NewTransaksiService(transaksiRepo, stokRepo, cartRepo)
+	transaksiService := service.NewTransaksiService(transaksiRepo, stokRepo, cartRepo, produkRepo)
 	kategoriService := service.NewKategoriService(kategoriRepo)
 	cartService := service.NewCartService(cartRepo, stokRepo, produkRepo)
 

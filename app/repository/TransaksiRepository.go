@@ -25,9 +25,7 @@ func (r *TransaksiRepository) Insert(Transaksi entity.Transaksi) (entity.Transak
 		return Transaksi, err
 	}
 
-	newTransaksi, err := r.FindById(Transaksi.ID)
-
-	return newTransaksi, nil
+	return Transaksi, nil
 }
 
 // @Summary : Get Transaksis

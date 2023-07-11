@@ -12,11 +12,12 @@ type TransaksiService struct {
 	prodRepo   repository.ProdukRepository
 }
 
-func NewTransaksiService(r repository.TransaksiRepository, s repository.StokRepository, c repository.CartRepository) TransaksiService {
+func NewTransaksiService(r repository.TransaksiRepository, s repository.StokRepository, c repository.CartRepository, p repository.ProdukRepository) TransaksiService {
 	return TransaksiService{
 		repository: r,
 		stokRepo:   s,
 		cartRepo:   c,
+		prodRepo:   p,
 	}
 }
 
@@ -43,13 +44,18 @@ func (s *TransaksiService) Insert(Transaksi entity.Transaksi) (entity.Transaksi,
 		return newTransaksi, err
 	}
 
-	for _, detail := range newTransaksi.DetailTransaksi {
+	for _, detail := range Transaksi.DetailTransaksi {
+		produk, err := s.prodRepo.FindById(detail.ProdukID)
+
+		if err != nil {
+			return newTransaksi, err
+		}
 		_, err = s.stokRepo.Insert(entity.Stok{
 			ProdukID:     detail.ProdukID,
 			Type:         "Sold",
 			Value:        detail.JumlahBeli,
-			Stok:         detail.Produk.Stok.Stok,
-			UserCreateID: newTransaksi.KasirID,
+			Stok:         produk.Stok.Stok,
+			UserCreateID: Transaksi.KasirID,
 		})
 
 		if err != nil {

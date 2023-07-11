@@ -147,7 +147,7 @@ func (r *CartRepository) Delete(ID int) (bool, error) {
 func (r *CartRepository) ClearCart(ID int) (bool, error) {
 	var Cart entity.Cart
 
-	err := r.config.DB.Where("created_by = ?", ID).Delete(&Cart).Error
+	err := r.config.DB.Debug().Unscoped().Where("created_by = ?", ID).Delete(&Cart).Error
 
 	if err != nil {
 		return false, err
