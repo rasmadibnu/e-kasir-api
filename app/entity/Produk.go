@@ -19,6 +19,7 @@ type Produk struct {
 	Supplier     Supplier       `json:"supplier"`
 	Kategori     Kategori       `json:"kategori"`
 	Stok         Stok           `json:"stok"`
+	Stoks        []Stok         `json:"history_stok"`
 	UserCreateID int            `gorm:"column:created_by;type:int(11)" json:"created_by"`
 	UserCreate   *User          `gorm:"foreignKey:UserCreateID" json:"user_create"`
 	UserUpdateID int            `gorm:"column:created_by;type:int(11)" json:"updated_by"`

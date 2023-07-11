@@ -18,6 +18,19 @@ func NewStokRepository(database config.Database) StokRepository {
 // @Summary : Insert Stok
 // @Description : Insert Stok to database
 // @Author : rasmadibbnu
+func (r *StokRepository) BacthInsert(Stok []entity.Stok) ([]entity.Stok, error) {
+	err := r.config.DB.Create(&Stok).Error
+
+	if err != nil {
+		return Stok, err
+	}
+
+	return Stok, nil
+}
+
+// @Summary : Insert Stok
+// @Description : Insert Stok to database
+// @Author : rasmadibbnu
 func (r *StokRepository) Insert(Stok entity.Stok) (entity.Stok, error) {
 	err := r.config.DB.Debug().Create(&Stok).Error
 

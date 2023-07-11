@@ -54,7 +54,7 @@ func (s *TransaksiService) Insert(Transaksi entity.Transaksi) (entity.Transaksi,
 			ProdukID:     detail.ProdukID,
 			Type:         "Sold",
 			Value:        detail.JumlahBeli,
-			Stok:         produk.Stok.Stok,
+			Stok:         produk.Stok.Stok - detail.JumlahBeli,
 			UserCreateID: Transaksi.KasirID,
 		})
 

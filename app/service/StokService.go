@@ -31,6 +31,19 @@ func (s *StokService) List(param map[string]interface{}) ([]entity.Stok, error) 
 // @Summary : Insert Stok
 // @Description : insert Stok to repository
 // @Author : rasmadibnu
+func (s *StokService) BacthInsert(Stok []entity.Stok) ([]entity.Stok, error) {
+	newStok, err := s.repository.BacthInsert(Stok)
+
+	if err != nil {
+		return newStok, err
+	}
+
+	return newStok, nil
+}
+
+// @Summary : Insert Stok
+// @Description : insert Stok to repository
+// @Author : rasmadibnu
 func (s *StokService) Insert(Stok entity.Stok) (entity.Stok, error) {
 	newStok, err := s.repository.Insert(Stok)
 

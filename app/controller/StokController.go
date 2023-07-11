@@ -58,7 +58,7 @@ func (controller StokController) Index(ctx *gin.Context) {
 // @method [POST]
 // @Router /stoks
 func (controller StokController) Store(ctx *gin.Context) {
-	var req entity.Stok
+	var req []entity.Stok
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp := helper.ErrorJSON(ctx, "Failed to crate Stok", http.StatusBadRequest, err.Error())
@@ -68,7 +68,7 @@ func (controller StokController) Store(ctx *gin.Context) {
 		return
 	}
 
-	Stok, err := controller.service.Insert(req)
+	Stok, err := controller.service.BacthInsert(req)
 
 	if err != nil {
 		resp := helper.ErrorJSON(ctx, "Failed to create Stok", http.StatusBadRequest, err.Error())
