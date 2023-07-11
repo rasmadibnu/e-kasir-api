@@ -34,7 +34,7 @@ func (r *TransaksiRepository) Insert(Transaksi entity.Transaksi) (entity.Transak
 func (r *TransaksiRepository) FindAll(param map[string]interface{}) ([]entity.Transaksi, error) {
 	var Transaksis []entity.Transaksi
 
-	err := r.config.DB.Where(param).Preload("DetailTransaksi.Produk").Find(&Transaksis).Error
+	err := r.config.DB.Where(param).Preload("UserCreate").Preload("DetailTransaksi.Produk").Find(&Transaksis).Error
 
 	if err != nil {
 		return Transaksis, err

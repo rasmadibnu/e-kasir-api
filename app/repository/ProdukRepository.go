@@ -51,9 +51,9 @@ func (r *ProdukRepository) FindAll(param map[string]interface{}) ([]entity.Produ
 func (r *ProdukRepository) FindById(ID int) (entity.Produk, error) {
 	var Produk entity.Produk
 
-	err := r.config.DB.Where("id = ?", ID).Preload("Stok").Preload("Stoks", func(db *gorm.DB) *gorm.DB {
-		return db.Order("created_at desc")
-	}).First(&Produk).Error
+	err := r.config.DB.Where("id = ?", ID).Preload("UserCreate").Preload("Stok").Preload("Stoks", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("UserCreate").Order("created_at desc")
+	}).Preload("Stok.UserCreate").Preload("Supplier").Preload("Kategori").First(&Produk).Error
 
 	if err != nil {
 		return Produk, err
