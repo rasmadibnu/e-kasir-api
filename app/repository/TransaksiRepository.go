@@ -25,7 +25,9 @@ func (r *TransaksiRepository) Insert(Transaksi entity.Transaksi) (entity.Transak
 		return Transaksi, err
 	}
 
-	return Transaksi, nil
+	newTransaksi, err := r.FindById(Transaksi.ID)
+
+	return newTransaksi, nil
 }
 
 // @Summary : Get Transaksis
@@ -34,7 +36,7 @@ func (r *TransaksiRepository) Insert(Transaksi entity.Transaksi) (entity.Transak
 func (r *TransaksiRepository) FindAll(param map[string]interface{}) ([]entity.Transaksi, error) {
 	var Transaksis []entity.Transaksi
 
-	err := r.config.DB.Where(param).Find(&Transaksis).Error
+	err := r.config.DB.Where(param).Preload("DetailTransaksi.Produk").Find(&Transaksis).Error
 
 	if err != nil {
 		return Transaksis, err
@@ -49,7 +51,7 @@ func (r *TransaksiRepository) FindAll(param map[string]interface{}) ([]entity.Tr
 func (r *TransaksiRepository) FindById(ID int) (entity.Transaksi, error) {
 	var Transaksi entity.Transaksi
 
-	err := r.config.DB.First(&Transaksi).Error
+	err := r.config.DB.Preload("DetailTransaksi.Produk.Stok").First(&Transaksi).Error
 
 	if err != nil {
 		return Transaksi, err

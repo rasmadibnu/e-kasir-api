@@ -3,6 +3,8 @@ package repository
 import (
 	"kasir-cepat-api/app/entity"
 	"kasir-cepat-api/config"
+
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
@@ -59,7 +61,9 @@ func (r *UserRepository) FindByUsername(username string) (entity.User, error) {
 // @Author : rasmadibnu
 func (r *UserRepository) FindById(ID int) (entity.User, error) {
 	var user entity.User
-	err := r.config.DB.Where("id = ?", ID).First(&user).Error
+	err := r.config.DB.Preload("Cart.Produk", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("UserCreate").Preload("Stok.UserCreate").Preload("Supplier.UserCreate")
+	}).Preload("Transaksi").Where("id = ?", ID).First(&user).Error
 
 	if err != nil {
 		return user, err

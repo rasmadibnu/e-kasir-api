@@ -15,6 +15,8 @@ type User struct {
 	Password     string         `gorm:"column:password;type:varchar(100);NOT NULL" json:"password"`
 	Role         string         `gorm:"column:role;type:varchar(100);NOT NULL" json:"role"`
 	CreatedBy    int            `gorm:"column:created_by;type:int(11)" json:"created_by"`
+	Cart         []Cart         `gorm:"foreignKey:UserCreateID" json:"cart"`
+	Transaksi    []Transaksi    `gorm:"foreignKey:KasirID" json:"transaksi"`
 	UserCreate   *User          `gorm:"foreignKey:CreatedBy" json:"user_create"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`

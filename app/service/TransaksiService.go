@@ -7,11 +7,16 @@ import (
 
 type TransaksiService struct {
 	repository repository.TransaksiRepository
+	stokRepo   repository.StokRepository
+	cartRepo   repository.CartRepository
+	prodRepo   repository.ProdukRepository
 }
 
-func NewTransaksiService(r repository.TransaksiRepository) TransaksiService {
+func NewTransaksiService(r repository.TransaksiRepository, s repository.StokRepository, c repository.CartRepository) TransaksiService {
 	return TransaksiService{
 		repository: r,
+		stokRepo:   s,
+		cartRepo:   c,
 	}
 }
 
@@ -33,6 +38,26 @@ func (s *TransaksiService) List(param map[string]interface{}) ([]entity.Transaks
 // @Author : rasmadibnu
 func (s *TransaksiService) Insert(Transaksi entity.Transaksi) (entity.Transaksi, error) {
 	newTransaksi, err := s.repository.Insert(Transaksi)
+
+	if err != nil {
+		return newTransaksi, err
+	}
+
+	for _, detail := range newTransaksi.DetailTransaksi {
+		_, err = s.stokRepo.Insert(entity.Stok{
+			ProdukID:     detail.ProdukID,
+			Type:         "Sold",
+			Value:        detail.JumlahBeli,
+			Stok:         detail.Produk.Stok.Stok,
+			UserCreateID: newTransaksi.KasirID,
+		})
+
+		if err != nil {
+			return newTransaksi, err
+		}
+	}
+
+	_, err = s.cartRepo.ClearCart(newTransaksi.KasirID)
 
 	if err != nil {
 		return newTransaksi, err

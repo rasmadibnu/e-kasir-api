@@ -37,7 +37,7 @@ func (r *KategoriRepository) FindAll(param map[string]interface{}) ([]entity.Kat
 	var Kategoris []entity.Kategori
 
 	err := r.config.DB.Where(param).Preload("Produk", func(db *gorm.DB) *gorm.DB {
-		return db.Preload("Stok").Preload("Supplier")
+		return db.Preload("UserCreate").Preload("Stok.UserCreate").Preload("Supplier.UserCreate").Order("created_at desc")
 	}).Preload("UserCreate").Find(&Kategoris).Error
 
 	if err != nil {

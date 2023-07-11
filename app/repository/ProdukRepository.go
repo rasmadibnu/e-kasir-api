@@ -49,7 +49,7 @@ func (r *ProdukRepository) FindAll(param map[string]interface{}) ([]entity.Produ
 func (r *ProdukRepository) FindById(ID int) (entity.Produk, error) {
 	var Produk entity.Produk
 
-	err := r.config.DB.First(&Produk).Error
+	err := r.config.DB.Where("id = ?", ID).Preload("Stok").First(&Produk).Error
 
 	if err != nil {
 		return Produk, err

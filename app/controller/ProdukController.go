@@ -102,10 +102,10 @@ func (controller ProdukController) Store(ctx *gin.Context) {
 	req.SupplierID, _ = strconv.Atoi(ctx.PostForm("supplier_id"))
 	stok, _ := strconv.Atoi(ctx.PostForm("stok"))
 	req.Stok = entity.Stok{
-		Stok:      stok,
-		Value:     stok,
-		Type:      "New",
-		CreatedBy: createdBy,
+		Stok:         stok,
+		Value:        stok,
+		Type:         "New",
+		UserCreateID: createdBy,
 	}
 	req.UserCreateID = createdBy
 	req.Image = dst
