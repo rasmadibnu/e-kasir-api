@@ -37,10 +37,19 @@ type DetailTransaksi struct {
 	ID          int    `gorm:"column:id;type:int(11);primary_key" json:"id"`
 	TransaksiID int    `gorm:"column:transaksi_id;type:int(11)" json:"transaksi_id"`
 	ProdukID    int    `gorm:"column:produk_id;type:int(11)" json:"produk_id"`
+	Harga       int    `gorm:"column:harga" json:"harga"`
+	HargaRp     string `gorm:"-" json:"harga_rp"`
 	Produk      Produk `json:"produk"`
 	JumlahBeli  int    `gorm:"column:jumlah_beli;type:int(11)" json:"jumlah_beli"`
 }
 
 func (m *DetailTransaksi) TableName() string {
 	return "detail_transaksi"
+}
+
+func (u *DetailTransaksi) AfterFind(tx *gorm.DB) (err error) {
+	amount := u.Harga
+	amountFloat := float64(amount)
+	u.HargaRp = rupiah.FormatRupiah(amountFloat)
+	return
 }

@@ -21,7 +21,7 @@ func NewTransaksiRepository(database config.Database) TransaksiRepository {
 // @Description : Insert Transaksi to database
 // @Author : rasmadibbnu
 func (r *TransaksiRepository) Insert(Transaksi entity.Transaksi) (entity.Transaksi, error) {
-	err := r.config.DB.Debug().Create(&Transaksi).Error
+	err := r.config.DB.Create(&Transaksi).Error
 
 	if err != nil {
 		return Transaksi, err
