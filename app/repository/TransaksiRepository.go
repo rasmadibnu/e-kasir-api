@@ -38,7 +38,7 @@ func (r *TransaksiRepository) FindAll(param map[string]interface{}) ([]entity.Tr
 
 	err := r.config.DB.Where(param).Preload("UserCreate").Preload("DetailTransaksi.Produk", func(db *gorm.DB) *gorm.DB {
 		return db.Preload("UserCreate").Preload("Stok.UserCreate").Preload("Supplier.UserCreate")
-	}).Find(&Transaksis).Error
+	}).Order("id desc").Find(&Transaksis).Error
 
 	if err != nil {
 		return Transaksis, err
