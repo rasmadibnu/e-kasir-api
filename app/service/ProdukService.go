@@ -28,6 +28,19 @@ func (s *ProdukService) List(param map[string]interface{}) ([]entity.Produk, err
 	return Produk, nil
 }
 
+// @Summary : Search Produk
+// @Description : Search Produk from repository
+// @Author : rasmadibnu
+func (s *ProdukService) Search(param map[string]interface{}, keyword string) ([]entity.Produk, error) {
+	Produk, err := s.repository.Search(param, keyword)
+
+	if err != nil {
+		return Produk, err
+	}
+
+	return Produk, nil
+}
+
 // @Summary : Insert Produk
 // @Description : insert Produk to repository
 // @Author : rasmadibnu

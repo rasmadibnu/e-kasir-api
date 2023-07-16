@@ -76,6 +76,7 @@ func WebRouter(db config.Database) {
 	v1.DELETE("/suppliers/:id", supplierController.Delete)
 
 	v1.GET("/produk", produkController.Index)
+	v1.GET("/produk/search/:keyword", produkController.Search)
 	v1.POST("/produk", produkController.Store)
 	v1.GET("/produk/:id", produkController.Show)
 	v1.PUT("/produk/:id", produkController.Update)

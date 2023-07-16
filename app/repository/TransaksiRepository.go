@@ -3,6 +3,8 @@ package repository
 import (
 	"kasir-cepat-api/app/entity"
 	"kasir-cepat-api/config"
+
+	"gorm.io/gorm"
 )
 
 type TransaksiRepository struct {
@@ -34,7 +36,9 @@ func (r *TransaksiRepository) Insert(Transaksi entity.Transaksi) (entity.Transak
 func (r *TransaksiRepository) FindAll(param map[string]interface{}) ([]entity.Transaksi, error) {
 	var Transaksis []entity.Transaksi
 
-	err := r.config.DB.Where(param).Preload("UserCreate").Preload("DetailTransaksi.Produk").Find(&Transaksis).Error
+	err := r.config.DB.Where(param).Preload("UserCreate").Preload("DetailTransaksi.Produk", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("UserCreate").Preload("Stok.UserCreate").Preload("Supplier.UserCreate")
+	}).Find(&Transaksis).Error
 
 	if err != nil {
 		return Transaksis, err
@@ -49,7 +53,9 @@ func (r *TransaksiRepository) FindAll(param map[string]interface{}) ([]entity.Tr
 func (r *TransaksiRepository) FindById(ID int) (entity.Transaksi, error) {
 	var Transaksi entity.Transaksi
 
-	err := r.config.DB.Preload("DetailTransaksi.Produk.Stok").First(&Transaksi).Error
+	err := r.config.DB.Preload("DetailTransaksi.Produk", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("UserCreate").Preload("Stok.UserCreate").Preload("Supplier.UserCreate")
+	}).First(&Transaksi).Error
 
 	if err != nil {
 		return Transaksi, err

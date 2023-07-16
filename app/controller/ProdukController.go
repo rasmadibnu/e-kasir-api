@@ -53,6 +53,37 @@ func (controller ProdukController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, resp)
 }
 
+// @Summary Get Produk
+// @Description REST API Produk
+// @Author RasmadIbnu
+// @Success 200 {object} entity.Produk
+// @Failure 404 {object} nil
+// @method [GET]
+// @Router /produk
+func (controller ProdukController) Search(ctx *gin.Context) {
+	param := ctx.Request.URL.Query()
+	keyword := ctx.Param("keyword")
+
+	m := make(map[string]interface{})
+	for k, v := range param {
+		m[k] = v
+	}
+
+	produk, err := controller.service.Search(m, keyword)
+
+	if err != nil {
+		resp := helper.ErrorJSON(ctx, "Produk not Found", http.StatusNotFound, nil)
+
+		ctx.JSON(http.StatusNotFound, resp)
+
+		return
+	}
+
+	resp := helper.SuccessJSON(ctx, "Produk Found", http.StatusOK, produk)
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
 // @Summary insert Produk
 // @Description REST API Produk
 // @Author RasmadIbnu

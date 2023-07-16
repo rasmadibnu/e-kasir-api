@@ -45,6 +45,21 @@ func (r *ProdukRepository) FindAll(param map[string]interface{}) ([]entity.Produ
 	return Produks, nil
 }
 
+// @Summary : Get Produks
+// @Description : -
+// @Author : rasmadibbnu
+func (r *ProdukRepository) Search(param map[string]interface{}, keyword string) ([]entity.Produk, error) {
+	var Produks []entity.Produk
+
+	err := r.config.DB.Where(param).Where("name like ?", "%"+keyword+"%").Preload("UserCreate").Preload("Stok.UserCreate").Preload("Kategori.UserCreate").Preload("Supplier.UserCreate").Order("id desc").Find(&Produks).Error
+
+	if err != nil {
+		return Produks, err
+	}
+
+	return Produks, nil
+}
+
 // @Summary : Get Produk
 // @Description : Find Produk by ID
 // @Author : rasmadibbnu
