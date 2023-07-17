@@ -21,6 +21,7 @@ func WebRouter(db config.Database) {
 	transaksiRepo := repository.NewTransaksiRepository(db)
 	kategoriRepo := repository.NewKategoriRepository(db)
 	cartRepo := repository.NewCartRepository(db)
+	dashboardRepo := repository.NewDashboardRepository(db)
 
 	// Service Asset
 	userService := service.NewUserService(userRepo)
@@ -31,6 +32,7 @@ func WebRouter(db config.Database) {
 	transaksiService := service.NewTransaksiService(transaksiRepo, stokRepo, cartRepo, produkRepo)
 	kategoriService := service.NewKategoriService(kategoriRepo)
 	cartService := service.NewCartService(cartRepo, stokRepo, produkRepo)
+	dashboardService := service.NewDashboardService(dashboardRepo)
 
 	//Controller Asset
 	authController := controller.NewAuthController(userService, authService)
@@ -41,6 +43,7 @@ func WebRouter(db config.Database) {
 	transaksiController := controller.NewTransaksiController(transaksiService)
 	kategoriController := controller.NewKategoriController(kategoriService)
 	cartsController := controller.NewCartController(cartService)
+	dashboardController := controller.NewDashboardController(dashboardService)
 
 	// Route
 	httpRouter := gin.Default()
@@ -103,6 +106,8 @@ func WebRouter(db config.Database) {
 	v1.GET("/carts/:id", cartsController.Show)
 	v1.PUT("/carts/:id", cartsController.Update)
 	v1.DELETE("/carts/:id", cartsController.Delete)
+
+	v1.GET("/dashboard", dashboardController.Index)
 
 	httpRouter.Run(":" + os.Getenv("APP_PORT")) // Run Routes with PORT
 }
