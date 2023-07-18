@@ -77,6 +77,22 @@ func (r *ProdukRepository) FindById(ID int) (entity.Produk, error) {
 	return Produk, nil
 }
 
+func (r *ProdukRepository) FindByIdNoCart(ID int) (entity.Produk, error) {
+	var Produk entity.Produk
+
+	err := r.config.DB.Where("id = ?", ID).Preload("UserCreate").Preload("Stok", func(db *gorm.DB) *gorm.DB {
+		return db.Where("type not in ('Add Cart','Min Cart')")
+	}).Preload("Stoks", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("UserCreate").Order("created_at desc")
+	}).Preload("Stok.UserCreate").Preload("Supplier").Preload("Kategori").First(&Produk).Error
+
+	if err != nil {
+		return Produk, err
+	}
+
+	return Produk, nil
+}
+
 // @Summary : Update Produk
 // @Description : Update Produk by ID
 // @Author : rasmadibbnu

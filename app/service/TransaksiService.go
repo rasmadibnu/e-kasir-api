@@ -45,7 +45,7 @@ func (s *TransaksiService) Insert(Transaksi entity.Transaksi) (entity.Transaksi,
 	}
 
 	for _, detail := range Transaksi.DetailTransaksi {
-		produk, err := s.prodRepo.FindById(detail.ProdukID)
+		produk, err := s.prodRepo.FindByIdNoCart(detail.ProdukID)
 
 		if err != nil {
 			return newTransaksi, err
